@@ -5,18 +5,26 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+import com.xx.leave.duty.domain.Duty;
 import com.xx.leave.leave.domain.Leave;
 import com.xx.leave.leave.service.LeaveService;
 import com.xx.leave.leave.service.impl.LeaveServiceImpl;
+import com.xx.leave.section.domain.Section;
 import com.xx.leave.utils.commom.CommonUtils;
 import com.xx.leave.utils.commom.PageBean;
+import com.xx.leave.utils.jdbc.TxQueryRunner;
 import com.xx.leave.utils.servlet.BaseServlet;
 import com.xx.leave.worker.domain.Worker;
+import com.xx.leave.worker.domain.WorkerExt;
 
 
 
@@ -24,6 +32,36 @@ public class LeaveServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private LeaveService leaveService=new LeaveServiceImpl();
+	
+	
+	/**
+	 * 统计每个教职工的请假天数
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 * @throws SQLException 
+	 */
+//	public void leaveDays(HttpServletRequest request, HttpServletResponse response)
+
+	public String leaveDays(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+		try {
+			Leave leaveList=CommonUtils.toBean(request.getParameterMap(), Leave.class);
+			leaveList=encoding(leaveList);
+			int pageCode=findPageCode(request);
+			int pageSize=10;
+			PageBean<Leave> listbean=leaveService.findCd1(leaveList,pageCode,pageSize);			
+			listbean.setUrl(getUrl(request));
+			request.setAttribute("allMsg", listbean);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return "f:/jsp/leave/leaveDays.jsp";
+	}
+	
+	
+	
 	/**
 	 * 打印请假条
 	 * @param request

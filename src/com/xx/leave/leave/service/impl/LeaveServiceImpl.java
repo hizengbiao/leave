@@ -46,6 +46,11 @@ public class LeaveServiceImpl implements LeaveService {
 		
 		return leaveDao.findCd1(leave, pc, ps);
 	}
+	
+	public PageBean<Leave> findLeaveDays(Leave leave, int pc, int ps) throws SQLException {
+		
+		return leaveDao.findLeaveDays(leave, pc, ps);
+	}
 
 	public int print(String id) {
 		try{

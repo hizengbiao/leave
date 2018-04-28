@@ -131,6 +131,44 @@ public class LeaveDaoImpl implements LeaveDao {
 		leaveList.setPagelist(list);
 		return leaveList;
 	}
+	
+	public PageBean<Leave> findLeaveDays(Leave leave, int pc, int ps) throws SQLException {
+		PageBean<Leave> leaveList=new PageBean<Leave>();
+		leaveList.setPageCode(pc);
+		leaveList.setPageSize(ps);
+		//÷ÿ”√
+		StringBuilder sb=new StringBuilder("SELECT count(*) from `leave`");
+		StringBuilder where=new StringBuilder(" where 1=1");
+		List<Object> params =new ArrayList<Object>();
+		String wId=leave.getwIds();
+		if(wId!=null&&!wId.trim().isEmpty()){
+			where.append(" and wId like ?");
+			params.add("%"+wId+"%");
+		}
+		
+		String name = leave.getwNames();
+		if(name!=null&&!name.trim().isEmpty()){
+			where.append(" or wName like ?");
+			params.add("%"+name+"%");
+		}
+		/*Integer state = leave.getStates();
+		if(state!=null && state !=0){
+			where.append(" and state like ?");
+			params.add("%"+state+"%");
+		}*/
+		Number number=(Number)qr.query(sb.append(where).toString(), new ScalarHandler(),params.toArray());
+		int totalRecord=number.intValue();
+		leaveList.setTotalRecord(totalRecord);
+		StringBuilder sql=new StringBuilder("SELECT * from `leave` ");
+		StringBuilder limit=new StringBuilder(" limit ?,?");
+		params.add((pc-1)*ps);
+		params.add(ps);
+		List<Leave> list= qr.query(sql.append(where).append(limit).toString(), new BeanListHandler<Leave>(Leave.class),params.toArray());
+		leaveList.setPagelist(list);
+		return leaveList;
+	}
+	
+	
 	public Leave prints(String id) {
 		String sql ="SELECT w.id,w.wId,w.wName,w.wSex,w.wTel,w.wPhone,"
 				+ "du.dName AS duName,d.dName,w.auth,w.wPassword,s.sName,"

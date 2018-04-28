@@ -13,6 +13,7 @@ public interface LeaveDao {
 	public int xiaoShenLeave(String id);
 	public PageBean<Leave> findCd(Leave leave,int pc,int ps) throws SQLException;
 	public PageBean<Leave> findCd1(Leave leave,int pc,int ps) throws SQLException;
+	public PageBean<Leave> findLeaveDays(Leave leave,int pc,int ps) throws SQLException;
 	public Leave prints(String id);
 	public void xiao(String id);	
 }

@@ -44,6 +44,7 @@ function load() {
 		bar1.add("院系管理", "添加院系", "<c:url value='/DepartmentServlet?method=preInsert'/>", "body");
 		bar1.add("院系管理", "查看院系", "<c:url value='/DepartmentServlet?method=query'/>", "body");
 		bar1.add("请假信息管理", "查看请假记录", "<c:url value='/LeaveServlet?method=findCd1'/>", "body");
+		bar1.add("请假信息管理", "查看请假天数", "<c:url value='/LeaveServlet?method=leaveDays'/>", "body");
 
 	  </c:if>
 	
