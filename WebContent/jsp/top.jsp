@@ -20,8 +20,8 @@
   <body style="background: rgb(78,78,78);color: white;">
   <h1 style="text-align: center; ">XX系统</h1>
   <c:if test="${user.auth eq 3 }">
-  	<p style="font-size: 11pt;">工号：${user.wId }</p>
-<p style="font-size: 11pt;">姓名：${user.wName }</p>
+  	<p style="font-size: 11pt;">工号：${user.aId }</p>
+<p style="font-size: 11pt;">姓名：${user.aName }</p>
 <p style="font-size: 11pt;">管理员</p>
   </c:if>
     <c:if test="${user.auth eq 1 }">

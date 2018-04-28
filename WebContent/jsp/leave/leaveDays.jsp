@@ -10,7 +10,7 @@
 <body>
 
 <form action="<c:url value='/LeaveServlet'/>" method="get">
-<input type="hidden" name="method" value="findCd1"/>
+<input type="hidden" name="method" value="leaveDays"/>
 <table border="0" align="center" width="40%" style="margin-left: 100px;">
 	<tr>
 		<td width="100px">工号</td>
@@ -45,57 +45,15 @@
 	<tr>
 		<th>工号</th>
 		<th>姓名</th>	
-		<th>请假时间</th>
+		<th>请假天数</th>
 	</tr>
 	<c:forEach var="list" items="${requestScope.allMsg.pagelist }">
 	<tr>
 		<td>${list.wId }</td>
 		<td>${list.wName }</td>
-		<td>
-			<fmt:formatDate pattern="yyyy-MM-dd" value="${list.startTime }"/>			
-		</td>
-		<td>
-			<fmt:formatDate pattern="yyyy-MM-dd" value="${list.endTime }"/>			
-		</td>
-		<td>${list.remark }</td>
-		<td>
-			<c:if test="${list.state eq 1}">
-				请假未审核
-			</c:if>
-			<c:if test="${list.state eq 2}">
-				请假已审核
-			</c:if>
-
-			<c:if test="${list.state eq 3}">
-				已经下载
-			</c:if>
-			<c:if test="${list.state eq 4}">
-				等待销假审核
-			</c:if>
-			<c:if test="${list.state eq 5}">
-				销假已审核
-			</c:if>
-			<c:if test="${list.state eq 6}">
-				过期
-			</c:if>
-			<c:if test="${list.state eq 7}">
-				旷工
-			</c:if>
-			
-		</td>
-		<td>
-			
-			<c:if test="${user.auth eq 2}">
-				<c:if test="${list.state eq 1}">
-					<a href="<c:url value='/LeaveServlet?method=shenhe&id=${list.id }'/>">请假审核</a>			
-				</c:if>
-			</c:if>
-			<c:if test="${user.auth eq 3}">
-				<c:if test="${list.state eq 4}">
-					<a href="<c:url value='/LeaveServlet?method=xiaoShen&id=${list.id }'/>">销假审核</a>			
-				</c:if>
-			</c:if>
-		</td>
+		<td>${list.leaveDays }</td>
+		
+		
 	</tr>
 	</c:forEach>
 </table>

@@ -1,6 +1,7 @@
 package com.xx.leave.leave.service.impl;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import com.xx.leave.leave.dao.LeaveDao;
 import com.xx.leave.leave.dao.impl.LeaveDaoImpl;
 import com.xx.leave.leave.domain.Leave;
+import com.xx.leave.leave.domain.LeaveDays;
 import com.xx.leave.leave.service.LeaveService;
 import com.xx.leave.utils.commom.PageBean;
 import com.xx.leave.utils.doc.DocUtils;
@@ -47,7 +49,7 @@ public class LeaveServiceImpl implements LeaveService {
 		return leaveDao.findCd1(leave, pc, ps);
 	}
 	
-	public PageBean<Leave> findLeaveDays(Leave leave, int pc, int ps) throws SQLException {
+	public PageBean<LeaveDays> findLeaveDays(Leave leave, int pc, int ps) throws SQLException, ParseException {
 		
 		return leaveDao.findLeaveDays(leave, pc, ps);
 	}

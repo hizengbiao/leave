@@ -3,6 +3,7 @@ package com.xx.leave.leave.web.servlet;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.xx.leave.duty.domain.Duty;
 import com.xx.leave.leave.domain.Leave;
+import com.xx.leave.leave.domain.LeaveDays;
 import com.xx.leave.leave.service.LeaveService;
 import com.xx.leave.leave.service.impl.LeaveServiceImpl;
 import com.xx.leave.section.domain.Section;
@@ -40,18 +42,20 @@ public class LeaveServlet extends BaseServlet {
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
+	 * @throws ParseException 
 	 * @throws SQLException 
 	 */
 //	public void leaveDays(HttpServletRequest request, HttpServletResponse response)
 
 	public String leaveDays(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
 		try {
 			Leave leaveList=CommonUtils.toBean(request.getParameterMap(), Leave.class);
 			leaveList=encoding(leaveList);
 			int pageCode=findPageCode(request);
 			int pageSize=10;
-			PageBean<Leave> listbean=leaveService.findCd1(leaveList,pageCode,pageSize);			
+//			PageBean<Leave> listbean1=leaveService.findCd1(leaveList,pageCode,pageSize);		
+			PageBean<LeaveDays> listbean=leaveService.findLeaveDays(leaveList,pageCode,pageSize);
 			listbean.setUrl(getUrl(request));
 			request.setAttribute("allMsg", listbean);
 		} catch (SQLException e) {
