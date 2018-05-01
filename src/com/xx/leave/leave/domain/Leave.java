@@ -15,6 +15,8 @@ public class Leave extends WorkerExt{
     private Date endTime;
 
     private String remark;
+    
+    private String year;
 
     private Integer state;
 
@@ -126,4 +128,12 @@ public class Leave extends WorkerExt{
     public void setwName(String wName) {
         this.wName = wName == null ? null : wName.trim();
     }
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
 }
