@@ -60,7 +60,7 @@ public class LeaveServlet extends BaseServlet {
 			request.setAttribute("allMsg", listbean);
 			
 			String leaveYear=(String) request.getParameter("year");
-//			System.out.println("\n\n"+leaveYear+"\n\n");
+//			System.out.println("\n\n"+leaveList.getYear()+"\n\n");
 			if (leaveYear != null && !leaveYear.trim().isEmpty()) {
 				request.setAttribute("year", request.getParameter("year")+"Äê");
 			}

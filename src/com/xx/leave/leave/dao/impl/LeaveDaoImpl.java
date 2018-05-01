@@ -150,22 +150,22 @@ public class LeaveDaoImpl implements LeaveDao {
 		PageBean<LeaveDays> leaveList = new PageBean<LeaveDays>();
 		leaveList.setPageCode(pc);
 		leaveList.setPageSize(ps);
-		
+
 		StringBuilder where = new StringBuilder(" ");
-//		List<Object> params = new ArrayList<Object>();
+		// List<Object> params = new ArrayList<Object>();
 		String wId = leave.getwIds();
 		if (wId != null && !wId.trim().isEmpty()) {
 			where.append(" and wId like ");
-			where.append("'%"+wId+"%'");
+			where.append("'%" + wId + "%'");
 		}
 
 		String name = leave.getwNames();
-		
+
 		if (name != null && !name.trim().isEmpty()) {
 			where.append(" and wName like ");
-			where.append("'%"+name+"%'");
+			where.append("'%" + name + "%'");
 		}
-		
+
 		// 重用
 		/*
 		 * StringBuilder sb=new StringBuilder("SELECT count(*) from `leave`");
@@ -193,7 +193,8 @@ public class LeaveDaoImpl implements LeaveDao {
 		 * params.add((pc-1)*ps); params.add(ps);
 		 */
 
-		StringBuilder sql = new StringBuilder("SELECT w.wId,w.wName FROM `worker` w WHERE w.auth in ('1','2')");
+		StringBuilder sql = new StringBuilder(
+				"SELECT w.wId,w.wName FROM `worker` w WHERE w.auth in ('1','2')");
 		String sql2 = "SELECT l.startTime,l.endTime FROM `leave` l where l.wId=?";
 
 		/*
@@ -203,10 +204,11 @@ public class LeaveDaoImpl implements LeaveDao {
 		 */
 
 		List<LeaveDays> lt = new ArrayList<LeaveDays>();
-		
+
 		System.out.println(sql.append(where).toString());
 
-		List<Object[]> list = qr.query(sql.append(where).toString(), new ArrayListHandler());
+		List<Object[]> list = qr.query(sql.append(where).toString(),
+				new ArrayListHandler());
 
 		int totalRecord = list.size();
 		leaveList.setTotalRecord(totalRecord);
@@ -230,18 +232,53 @@ public class LeaveDaoImpl implements LeaveDao {
 
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+		String year = leave.getYear();
+		Date startTime=new Date();
+		Date endTime=new Date();
+		boolean timeCondition = false;
+		if (year != null && !year.trim().isEmpty()) {
+			timeCondition = true;
+			startTime = dfs.parse(year + "-01-01 00:00:00");
+			endTime = dfs.parse(year + "-12-31 00:00:00");
+		}
+
 		int index = 0;
 		for (List<Object[]> l : list2)
 			try {
 				{
 					if (!l.isEmpty()) {
-						{long day1=0;
+						{
+							long day1 = 0;
 							for (Object[] o : l) {
 
-								java.util.Date begin = dfs.parse(o[0]
-										.toString());
-								java.util.Date end = dfs.parse(o[1].toString());
-								long between = (end.getTime() - begin.getTime()) / 1000;// 除以1000是为了转换成秒
+								Date begin = dfs.parse(o[0].toString());
+								Date end = dfs.parse(o[1].toString());
+								
+								long between;
+
+								if (timeCondition == true) {
+									if(((begin.getTime()-endTime.getTime())>0)||((startTime.getTime()-end.getTime())>0))
+									between=0;
+									else if(((startTime.getTime()-begin.getTime())>=0)&&((end.getTime()-endTime.getTime())<=0)){
+										between = (end.getTime() - startTime
+												.getTime()+1) / 1000;// 除以1000是为了转换成秒
+									}
+									else if(((begin.getTime()-startTime.getTime())>=0)&&((end.getTime()-endTime.getTime())>=0)){
+										between = (endTime.getTime() - begin
+												.getTime()+1) / 1000;// 除以1000是为了转换成秒
+									}
+									else if(((startTime.getTime()-begin.getTime())>=0)&&((end.getTime()-endTime.getTime())>=0)){
+										between = (endTime.getTime() - startTime
+												.getTime()+1) / 1000;// 除以1000是为了转换成秒
+									}
+									else{
+										between = (end.getTime() - begin
+												.getTime()+1) / 1000;// 除以1000是为了转换成秒
+									}
+								} else {
+									between = (end.getTime() - begin
+											.getTime()+1) / 1000;// 除以1000是为了转换成秒
+								}
 								day1 += between / (24 * 3600);
 								lt.get(index).setLeaveDays((int) day1);
 								// System.out.printf("%s\t%s\t%d\n",
@@ -259,12 +296,13 @@ public class LeaveDaoImpl implements LeaveDao {
 			}
 
 		Collections.sort(lt);
-		
+
 		List<LeaveDays> ltd = new ArrayList<LeaveDays>();
-		for(int i=(pc - 1) * ps;(i<(pc - 1) * ps+ps)&&(i<totalRecord);i++){
+		for (int i = (pc - 1) * ps; (i < (pc - 1) * ps + ps)
+				&& (i < totalRecord); i++) {
 			ltd.add(lt.get(i));
 		}
-		
+
 		leaveList.setPagelist(ltd);
 		return leaveList;
 	}
