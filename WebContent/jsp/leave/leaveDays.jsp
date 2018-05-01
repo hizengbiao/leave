@@ -22,6 +22,11 @@
 		<td>
 			<input type="text" name="wNames"/>
 		</td>
+		
+		<td>年份</td>
+		<td>
+			<input type="text" name="year"/>
+		</td>
 
 				
 	</tr>
@@ -40,7 +45,7 @@
 </table>
 </form>
 <font style="color:red;"> ${msg }</font>
-<h3 align="center">个人请假时间列表</h3>
+<h3 align="center">${requestScope.year }个人请假天数列表</h3>
 <table border="1" width="70%" align="center">
 	<tr>
 		<th>工号</th>
@@ -49,9 +54,9 @@
 	</tr>
 	<c:forEach var="list" items="${requestScope.allMsg.pagelist }">
 	<tr>
-		<td>${list.wId }</td>
-		<td>${list.wName }</td>
-		<td>${list.leaveDays }</td>
+		<td align="left">${list.wId }</td>
+		<td align="center">${list.wName }</td>
+		<td align="center">${list.leaveDays }</td>
 		
 		
 	</tr>

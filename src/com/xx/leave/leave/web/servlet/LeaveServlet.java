@@ -58,6 +58,15 @@ public class LeaveServlet extends BaseServlet {
 			PageBean<LeaveDays> listbean=leaveService.findLeaveDays(leaveList,pageCode,pageSize);
 			listbean.setUrl(getUrl(request));
 			request.setAttribute("allMsg", listbean);
+			
+			String leaveYear=(String) request.getParameter("year");
+//			System.out.println("\n\n"+leaveYear+"\n\n");
+			if (leaveYear != null && !leaveYear.trim().isEmpty()) {
+				request.setAttribute("year", request.getParameter("year")+"Äê");
+			}
+			else
+			request.setAttribute("year", "");
+			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
