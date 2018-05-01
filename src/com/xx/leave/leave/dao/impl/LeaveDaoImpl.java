@@ -210,8 +210,7 @@ public class LeaveDaoImpl implements LeaveDao {
 		List<Object[]> list = qr.query(sql.append(where).toString(),
 				new ArrayListHandler());
 
-		int totalRecord = list.size();
-		leaveList.setTotalRecord(totalRecord);
+		
 
 		List<List<Object[]>> list2 = new ArrayList<List<Object[]>>();
 		for (Object[] o : list) {
@@ -233,8 +232,8 @@ public class LeaveDaoImpl implements LeaveDao {
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		String year = leave.getYear();
-		Date startTime=new Date();
-		Date endTime=new Date();
+		Date startTime = new Date();
+		Date endTime = new Date();
 		boolean timeCondition = false;
 		if (year != null && !year.trim().isEmpty()) {
 			timeCondition = true;
@@ -253,31 +252,38 @@ public class LeaveDaoImpl implements LeaveDao {
 
 								Date begin = dfs.parse(o[0].toString());
 								Date end = dfs.parse(o[1].toString());
-								
-								long between;
+
+								long between = 0;
 
 								if (timeCondition == true) {
-									if(((begin.getTime()-endTime.getTime())>0)||((startTime.getTime()-end.getTime())>0))
-									between=0;
-									else if(((startTime.getTime()-begin.getTime())>=0)&&((end.getTime()-endTime.getTime())<=0)){
+									if (((begin.getTime() - endTime.getTime()) > 0)
+											|| ((startTime.getTime() - end
+													.getTime()) > 0))
+										between = 0;
+									else if (((startTime.getTime() - begin
+											.getTime()) >= 0)
+											&& ((end.getTime() - endTime
+													.getTime()) <= 0)) {
 										between = (end.getTime() - startTime
-												.getTime()+1) / 1000;// 除以1000是为了转换成秒
-									}
-									else if(((begin.getTime()-startTime.getTime())>=0)&&((end.getTime()-endTime.getTime())>=0)){
+												.getTime()) / 1000 + 24 * 3600;// 除以1000是为了转换成秒
+									} else if (((begin.getTime() - startTime
+											.getTime()) >= 0)
+											&& ((end.getTime() - endTime
+													.getTime()) >= 0)) {
 										between = (endTime.getTime() - begin
-												.getTime()+1) / 1000;// 除以1000是为了转换成秒
-									}
-									else if(((startTime.getTime()-begin.getTime())>=0)&&((end.getTime()-endTime.getTime())>=0)){
+												.getTime()) / 1000 + 24 * 3600;// 除以1000是为了转换成秒
+									} else if (((startTime.getTime() - begin
+											.getTime()) >= 0)
+											&& ((end.getTime() - endTime
+													.getTime()) >= 0)) {
 										between = (endTime.getTime() - startTime
-												.getTime()+1) / 1000;// 除以1000是为了转换成秒
-									}
-									else{
+												.getTime()) / 1000 + 24 * 3600;// 除以1000是为了转换成秒
+									} else {
 										between = (end.getTime() - begin
-												.getTime()+1) / 1000;// 除以1000是为了转换成秒
+												.getTime()) / 1000 + 24 * 3600;// 除以1000是为了转换成秒
 									}
 								} else {
-									between = (end.getTime() - begin
-											.getTime()+1) / 1000;// 除以1000是为了转换成秒
+									between = (end.getTime() - begin.getTime()) / 1000 + 24 * 3600;// 除以1000是为了转换成秒
 								}
 								day1 += between / (24 * 3600);
 								lt.get(index).setLeaveDays((int) day1);
@@ -296,6 +302,17 @@ public class LeaveDaoImpl implements LeaveDao {
 			}
 
 		Collections.sort(lt);
+		
+		//不显示请假天数为0的记录：
+		/*for(int i=0;i<lt.size();i++){
+			if(lt.get(i).getLeaveDays()==0){
+				lt.remove(i);
+				i--;
+			}
+		}*/
+		
+		int totalRecord = lt.size();
+		leaveList.setTotalRecord(totalRecord);
 
 		List<LeaveDays> ltd = new ArrayList<LeaveDays>();
 		for (int i = (pc - 1) * ps; (i < (pc - 1) * ps + ps)
